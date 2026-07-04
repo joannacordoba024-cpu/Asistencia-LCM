@@ -3,68 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asistencia Corporativa</title>
+  <title>LCM 2026 - Control de Asistencia</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f6f9; }
-    .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-    select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
-    button { background-color: #1a73e8; color: white; border: none; font-weight: bold; cursor: pointer; }
-    button:hover { background-color: #1557b0; }
-    #status { color: #5f6368; font-weight: bold; margin-top: 15px; }
+    body { 
+      font-family: "Comic Sans MS", "Chalkboard SE", cursive, sans-serif; 
+      text-align: center; 
+      padding: 20px; 
+      background-color: #f4f6f9; 
+    }
+    .card { 
+      background: white; 
+      padding: 30px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+      max-width: 400px; 
+      margin: auto; 
+    }
+    .logo-colegio { 
+      width: 100px; 
+      height: auto; 
+      margin: 0 auto 15px auto; 
+      display: block; 
+    }
+    select, button { 
+      font-family: "Comic Sans MS", "Chalkboard SE", cursive, sans-serif;
+      width: 100%; 
+      padding: 12px; 
+      margin: 10px 0; 
+      border-radius: 6px; 
+      border: 1px solid #ccc; 
+      font-size: 16px; 
+    }
+    button { 
+      background-color: #1a73e8; 
+      color: white; 
+      border: none; 
+      font-weight: bold; 
+      cursor: pointer; 
+    }
+    button:hover { 
+      background-color: #1557b0; 
+    }
+    #status { 
+      color: #5f6368; 
+      font-weight: bold; 
+      margin-top: 15px; 
+    }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <h2>Reloj Checador</h2>
+  <!-- Escudo oficial enviado por el usuario -->
+  <img src="https://liceoculturalmosquera.edu.co" alt="Escudo Liceo Cultural Mosquera" class="logo-colegio">
+  
+  <h2>LCM 2026</h2>
   <p>Selecciona tu nombre y marca tu jornada:</p>
   
   <select id="nombre">
     <option value="">-- Selecciona tu Nombre --</option>
-    
-    <!-- ⚠️ PEGA AQUÍ ABAJO TU LISTA DE 55 TRABAJADORES SIGUIENDO ESTE FORMATO: -->
-<option value="Adriana Muñoz Hernandez">Adriana Muñoz Hernandez</option>
-<option value="Cristian David Castañeda Suarez">Cristian David Castañeda Suarez</option>
-<option value="Diana Alejandra Espitia Mikan">Diana Alejandra Espitia Mikan</option>
-<option value="Diana Carolina Sosa">Diana Carolina Sosa</option>
-<option value="Edwin David Moncada Gamboa">Edwin David Moncada Gamboa</option>
-<option value="Elizabeth Becerra Palacios">Elizabeth Becerra Palacios</option>
-<option value="Erika Dayann Calcetero Medina">Erika Dayann Calcetero Medina</option>
-<option value="Iván Rosendo Bautista Moreno">Iván Rosendo Bautista Moreno</option>
-<option value="Jazbleidy Catherine Fontecha Scarpetta">Jazbleidy Catherine Fontecha Scarpetta</option>
-<option value="Jenny Rincón Simijaca">Jenny Rincón Simijaca</option>
-<option value="Jessika Julieth Leiva Ribon">Jessika Julieth Leiva Ribon</option>
-<option value="Joanna cordoba cordoba">Joanna cordoba cordoba</option>
-<option value="Johanna Andrea Vargas Mora">Johanna Andrea Vargas Mora</option>
-<option value="John Jairo Gomez Munevar">John Jairo Gomez Munevar</option>
-<option value="John Stiven Florez Macana">John Stiven Florez Macana</option>
-<option value="Jonathan Camilo Díaz Rodríguez">Jonathan Camilo Díaz Rodríguez</option>
-<option value="Joshuar Abraham Aya Chao">Joshuar Abraham Aya Chao</option>
-<option value="Juan Camilo Lancheros Santamaria">Juan Camilo Lancheros Santamaria</option>
-<option value="Juana Valentína Avila Olarte">Juana Valentína Avila Olarte</option>
-<option value="Karem Vanesa Cruz Moreno">Karem Vanesa Cruz Moreno</option>
-<option value="Katherine Rocío Sierra Moreno">Katherine Rocío Sierra Moreno</option>
-<option value="Laura Vanessa Bello Corzo">Laura Vanessa Bello Corzo</option>
-<option value="Lina Patricia Vargas Rubiano">Lina Patricia Vargas Rubiano</option>
-<option value="Lizeth Yamile Quiroga Cubides">Lizeth Yamile Quiroga Cubides</option>
-<option value="Luisa Fernanda Ortiz">Luisa Fernanda Ortiz</option>
-<option value="Luz Adriana Ortiz Galindo">Luz Adriana Ortiz Galindo</option>
-<option value="Luz Mery Pinzón Ariza">Luz Mery Pinzón Ariza</option>
-<option value="Luz Stella Santana Bernal">Luz Stella Santana Bernal</option>
-<option value="Maria isabel montes peña">Maria isabel montes peña</option>
-<option value="Marlly Daniela Pérez Cardona">Marlly Daniela Pérez Cardona</option>
-<option value="Nancy Milena Olarte Quiroga">Nancy Milena Olarte Quiroga</option>
-<option value="Nancy rocío Reyes perilla">Nancy rocío Reyes perilla</option>
-<option value="Nancy Yamile Angarita Rivera">Nancy Yamile Angarita Rivera</option>
-<option value="Rosa Carolina Miranda Roncancio">Rosa Carolina Miranda Roncancio</option>
-<option value="Sandra Milena Muñoz Durán">Sandra Milena Muñoz Durán</option>
-<option value="Sara Daniela Barrios Carranza">Sara Daniela Barrios Carranza</option>
-<option value="Valentina del pilar castillo Ramirez">Valentina del pilar castillo Ramirez</option>
-<option value="Víctor Fabián Pinilla Rincón">Víctor Fabián Pinilla Rincón</option>
-<option value="Victor Manuel Pataquiva Heredia">Victor Manuel Pataquiva Heredia</option>
-<option value="Viviana Daniela Gómez Santos">Viviana Daniela Gómez Santos</option>
-<option value="Viviana Patricia Matamoros Fonseca">Viviana Patricia Matamoros Fonseca</option>
-
+    <option value="Adriana Muñoz Hernandez">Adriana Muñoz Hernandez</option>
+    <option value="Cristian David Castañeda Suarez">Cristian David Castañeda Suarez</option>
+    <option value="Diana Alejandra Espitia Mikan">Diana Alejandra Espitia Mikan</option>
+    <option value="Diana Carolina Sosa">Diana Carolina Sosa</option>
+    <option value="Edwin David Moncada Gamboa">Edwin David Moncada Gamboa</option>
+    <option value="Elizabeth Becerra Palacios">Elizabeth Becerra Palacios</option>
+    <option value="Erika Dayann Calcetero Medina">Erika Dayann Calcetero Medina</option>
+    <option value="Iván Rosendo Bautista Moreno">Iván Rosendo Bautista Moreno</option>
+    <option value="Jazbleidy Catherine Fontecha Scarpetta">Jazbleidy Catherine Fontecha Scarpetta</option>
+    <option value="Jenny Rincón Simijaca">Jenny Rincón Simijaca</option>
+    <option value="Jessika Julieth Leiva Ribon">Jessika Julieth Leiva Ribon</option>
+    <option value="Joanna cordoba cordoba">Joanna cordoba cordoba</option>
+    <option value="Johanna Andrea Vargas Mora">Johanna Andrea Vargas Mora</option>
+    <option value="John Jairo Gomez Munevar">John Jairo Gomez Munevar</option>
+    <option value="John Stiven Florez Macana">John Stiven Florez Macana</option>
+    <option value="Jonathan Camilo Díaz Rodríguez">Jonathan Camilo Díaz Rodríguez</option>
+    <option value="Joshuar Abraham Aya Chao">Joshuar Abraham Aya Chao</option>
+    <option value="Juan Camilo Lancheros Santamaria">Juan Camilo Lancheros Santamaria</option>
+    <option value="Juana Valentína Avila Olarte">Juana Valentína Avila Olarte</option>
+    <option value="Karem Vanesa Cruz Moreno">Karem Vanesa Cruz Moreno</option>
+    <option value="Katherine Rocío Sierra Moreno">Katherine Rocío Sierra Moreno</option>
+    <option value="Laura Vanessa Bello Corzo">Laura Vanessa Bello Corzo</option>
+    <option value="Lina Patricia Vargas Rubiano">Lina Patricia Vargas Rubiano</option>
+    <option value="Lizeth Yamile Quiroga Cubides">Lizeth Yamile Quiroga Cubides</option>
+    <option value="Luisa Fernanda Ortiz">Luisa Fernanda Ortiz</option>
+    <option value="Luz Adriana Ortiz Galindo">Luz Adriana Ortiz Galindo</option>
+    <option value="Luz Mery Pinzón Ariza">Luz Mery Pinzón Ariza</option>
+    <option value="Luz Stella Santana Bernal">Luz Stella Santana Bernal</option>
+    <option value="Maria isabel montes peña">Maria isabel montes peña</option>
+    <option value="Marlly Daniela Pérez Cardona">Marlly Daniela Pérez Cardona</option>
+    <option value="Nancy Milena Olarte Quiroga">Nancy Milena Olarte Quiroga</option>
+    <option value="Nancy rocío Reyes perilla">Nancy rocío Reyes perilla</option>
+    <option value="Nancy Yamile Angarita Rivera">Nancy Yamile Angarita Rivera</option>
+    <option value="Rosa Carolina Miranda Roncancio">Rosa Carolina Miranda Roncancio</option>
+    <option value="Sandra Milena Muñoz Durán">Sandra Milena Muñoz Durán</option>
+    <option value="Sara Daniela Barrios Carranza">Sara Daniela Barrios Carranza</option>
+    <option value="Valentina del pilar castillo Ramirez">Valentina del pilar castillo Ramirez</option>
+    <option value="Víctor Fabián Pinilla Rincón">Víctor Fabián Pinilla Rincón</option>
+    <option value="Victor Manuel Pataquiva Heredia">Victor Manuel Pataquiva Heredia</option>
+    <option value="Viviana Daniela Gómez Santos">Viviana Daniela Gómez Santos</option>
+    <option value="Viviana Patricia Matamoros Fonseca">Viviana Patricia Matamoros Fonseca</option>
   </select>
 
   <select id="accion">
@@ -77,7 +115,6 @@
 </div>
 
 <script>
-// Recuerda que aquí abajo ya debe estar tu enlace largo de Google Apps Script que termina en /exec
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8qrf5iTxl7JrgkFV_jt6QHVWIGol2bLpMo6dFzM4KpqPdt1s8I4rPlgN4Z6v4yFVn/exec";
 
 function capturarYEnviar() {
