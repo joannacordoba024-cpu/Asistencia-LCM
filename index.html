@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistencia Corporativa</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f6f9; }
+    .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+    select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
+    button { background-color: #1a73e8; color: white; border: none; font-weight: bold; cursor: pointer; }
+    button:hover { background-color: #1557b0; }
+    #status { color: #5f6368; font-weight: bold; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Reloj Checador</h2>
+  <p>Selecciona tu nombre y marca tu jornada:</p>
+  
+  <select id="nombre">
+    <option value="">-- Selecciona tu Nombre --</option>
+    <!-- MODIFICA O PEGA AQUÍ LOS NOMBRES DE TUS TRABAJADORES -->
+    <option value="Juan Pérez">Juan Pérez</option>
+    <option value="María López">María López</option>
+    <option value="Carlos Mendoza">Carlos Mendoza</option>
+  </select>
+
+  <select id="accion">
+    <option value="Entrada">Entrada 📥</option>
+    <option value="Salida">Salida 📤</option>
+  </select>
+
+  <button onclick="capturarYEnviar()">Registrar Asistencia</button>
+  <div id="status">Esperando registro...</div>
+</div>
+
+<script>
+// ⚠️ REEMPLAZA EL TEXTO DE ABAJO ENTRE COMILLAS POR TU ENLACE DE GOOGLE APPS SCRIPT QUE COPIASTE EN EL PASO 1
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8qrf5iTxl7JrgkFV_jt6QHVWIGol2bLpMo6dFzM4KpqPdt1s8I4rPlgN4Z6v4yFVn/exec";
+
+function capturarYEnviar() {
+  var nombre = document.getElementById("nombre").value;
+  var accion = document.getElementById("accion").value;
+  var statusDiv = document.getElementById("status");
+
+  if (!nombre) {
+    alert("Por favor, selecciona tu nombre.");
+    return;
+  }
+
+  statusDiv.innerHTML = "Obteniendo ubicación GPS obligatoria...";
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+      
+      statusDiv.innerHTML = "Enviando datos de asistencia...";
+      
+      // Envía la información al Excel de forma externa
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre: nombre, accion: accion, latitud: lat, longitud: lon })
+      })
+      .then(() => {
+        statusDiv.innerHTML = "¡Registro enviado con éxito!";
+        statusDiv.style.color = "green";
+      })
+      .catch(error => {
+        statusDiv.innerHTML = "❌ Error al conectar con el servidor.";
+        statusDiv.style.color = "red";
+      });
+
+    }, function(error) {
+      statusDiv.innerHTML = "❌ Error: Debes permitir el acceso al GPS para marcar asistencia.";
+      statusDiv.style.color = "red";
+    }, { enableHighAccuracy: true });
+  } else {
+    statusDiv.innerHTML = "Tu dispositivo no soporta geolocalización.";
+  }
+}
+</script>
+</body>
+</html>
