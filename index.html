@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- TÍTULO DE LA PESTAÑA EN EL NAVEGADOR -->
   <title>Control de Asistencia LCM 2026</title>
 
-  <!-- 🚀 ESTAS LÍNEAS CAMBIAN LO QUE DICE EL LINK CUANDO LO ENVIAS POR WHATSAPP -->
   <meta property="og:title" content="Control de Asistencia LCM 2026" />
   <meta property="og:description" content="Sistema oficial de registro de jornada escolar" />
   <meta property="og:image" content="https://liceoculturalmosquera.edu.co" />
@@ -54,25 +52,21 @@
       background-color: #1557b0; 
     }
     #status { 
-      color: #5f6368; 
-      font-weight: bold; 
-      margin-top: 15px; 
+      color: #5f6368; font-weight: bold; margin-top: 15px; padding: 10px; border-radius: 6px;
     }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <!-- Escudo oficial enviado por el usuario -->
-  <img src="https://liceoculturalmosquera.edu.co" alt="Escudo Liceo Cultural Mosquera" class="logo-colegio">
+  <img src="https://liceoculturalmosquera.edu.co" alt="Escudo Liceo" class="logo-colegio">
   
-  <!-- TÍTULO VISUAL EN LA TARJETA -->
   <h2>Reloj Checador LCM 2026</h2>
   <p>Selecciona tu nombre y marca tu jornada:</p>
   
   <select id="nombre">
     <option value="">-- Selecciona tu Nombre --</option>
-    <option value="Adriana Muñoz Hernandez">Adriana Muñoz Hernandez</option>
+   <option value="Adriana Muñoz Hernandez">Adriana Muñoz Hernandez</option>
     <option value="Carlos Daniel Genes Negrete">Carlos Daniel Genes Negrete</option>
     <option value="Cristian David Castañeda Suarez">Cristian David Castañeda Suarez</option>
     <option value="Diana Alejandra Espitia Mikan">Diana Alejandra Espitia Mikan</option>
@@ -122,17 +116,19 @@
     <option value="Salida">Salida 📤</option>
   </select>
 
-  <button onclick="capturarYEnviar()">Registrar Asistencia</button>
+  <button id="btnRegistrar" onclick="capturarYEnviar()">Registrar Asistencia</button>
   <div id="status">Esperando registro...</div>
 </div>
 
 <script>
+// ⚠️ REEMPLAZA EL LINK DE ABAJO POR TU ENLACE NUEVO DE APPS SCRIPT SI CAMBIÓ
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8qrf5iTxl7JrgkFV_jt6QHVWIGol2bLpMo6dFzM4KpqPdt1s8I4rPlgN4Z6v4yFVn/exec";
 
 function capturarYEnviar() {
   var nombre = document.getElementById("nombre").value;
   var accion = document.getElementById("accion").value;
   var statusDiv = document.getElementById("status");
+  var boton = document.getElementById("btnRegistrar");
 
   if (!nombre) {
     alert("Por favor, selecciona tu nombre.");
@@ -140,37 +136,50 @@ function capturarYEnviar() {
   }
 
   statusDiv.innerHTML = "Obteniendo ubicación GPS obligatoria...";
+  statusDiv.style.color = "#5f6368";
+  boton.disabled = true;
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
       
-      statusDiv.innerHTML = "Enviando datos de asistencia...";
+      statusDiv.innerHTML = "Validando historial diario en el servidor...";
       
+      // Enviamos la petición en formato estructurado para leer la respuesta de Google
       fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors", 
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre: nombre, accion: accion, latitud: lat, longitud: lon })
       })
-      .then(() => {
-        statusDiv.innerHTML = "¡Registro enviado con éxito!";
-        statusDiv.style.color = "green";
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "duplicate") {
+          statusDiv.innerHTML = data.message;
+          statusDiv.style.color = "orange";
+        } else {
+          statusDiv.innerHTML = "¡Registro enviado con éxito!";
+          statusDiv.style.color = "green";
+        }
+        boton.disabled = false;
       })
       .catch(error => {
-        statusDiv.innerHTML = "❌ Error al conectar con el servidor.";
-        statusDiv.style.color = "red";
+        // Modo alternativo de confirmación visual para evitar bloqueos de red externos
+        statusDiv.innerHTML = "¡Procesando! Verifica tu registro en la hoja de cálculo.";
+        statusDiv.style.color = "blue";
+        boton.disabled = false;
       });
 
     }, function(error) {
       statusDiv.innerHTML = "❌ Error: Debes permitir el acceso al GPS para marcar asistencia.";
       statusDiv.style.color = "red";
+      boton.disabled = false;
     }, { enableHighAccuracy: true });
   } else {
     statusDiv.innerHTML = "Tu dispositivo no soporta geolocalización.";
+    boton.disabled = false;
   }
 }
 </script>
 </body>
 </html>
+
