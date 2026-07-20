@@ -66,7 +66,7 @@
   
   <select id="nombre">
     <option value="">-- Selecciona tu Nombre --</option>
-   <option value="Adriana Muñoz Hernandez">Adriana Muñoz Hernandez</option>
+    <option value="Adriana Muñoz Hernandez">Adriana Muñoz Hernandez</option>
     <option value="Carlos Daniel Genes Negrete">Carlos Daniel Genes Negrete</option>
     <option value="Cristian David Castañeda Suarez">Cristian David Castañeda Suarez</option>
     <option value="Diana Alejandra Espitia Mikan">Diana Alejandra Espitia Mikan</option>
@@ -120,8 +120,28 @@
 </div>
 
 <script>
-// ⚠️ REEMPLAZA EL LINK DE ABAJO POR TU ENLACE NUEVO DE APPS SCRIPT SI CAMBIÓ
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8qrf5iTxl7JrgkFV_jt6QHVWIGol2bLpMo6dFzM4KpqPdt1s8I4rPlgN4Z6v4yFVn/exec";
+const SCRIPT_URL = "https://google.com";
+
+// Coordenadas geográficas de las dos sedes del colegio
+const SEDES_COLEGIO = [
+  { lat: 4.607875, lon: -74.156550 }, // Cra 90d # 42-20 sur
+  { lat: 4.607212, lon: -74.157393 }  // Calle 42 Sur #90C – 15
+];
+
+// Perímetro de tolerancia permitido en metros
+const RADIO_PERMITIDO_METROS = 60; 
+
+// Función matemática de Haversine para calcular distancia exacta en metros
+function obtenerDistanciaMetros(lat1, lon1, lat2, lon2) {
+  const R = 6371000; 
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
 function capturarYEnviar() {
   var nombre = document.getElementById("nombre").value;
@@ -134,6 +154,15 @@ function capturarYEnviar() {
     return;
   }
 
+  // 📅 VALIDACIÓN LOCAL DE FIN DE SEMANA
+  var fechaActual = new Date();
+  var diaSemana = fechaActual.getDay(); // 0 = Domingo, 6 = Sábado
+  if (diaSemana === 0 || diaSemana === 6) {
+    statusDiv.innerHTML = "❌ Error: El registro de asistencia no está disponible los fines de semana.";
+    statusDiv.style.color = "red";
+    return;
+  }
+
   statusDiv.innerHTML = "Obteniendo ubicación GPS obligatoria...";
   statusDiv.style.color = "#5f6368";
   boton.disabled = true;
@@ -143,9 +172,25 @@ function capturarYEnviar() {
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
       
+      // 📐 VALIDACIÓN DEL PERÍMETRO ESCOLAR (60 METROS)
+      let enInstalaciones = false;
+      for (let i = 0; i < SEDES_COLEGIO.length; i++) {
+        let distancia = obtenerDistanciaMetros(lat, lon, SEDES_COLEGIO[i].lat, SEDES_COLEGIO[i].lon);
+        if (distancia <= RADIO_PERMITIDO_METROS) {
+          enInstalaciones = true;
+          break;
+        }
+      }
+
+      if (!enInstalaciones) {
+        statusDiv.innerHTML = "❌ Error: Debes estar en las instalaciones del colegio para registrar asistencia.";
+        statusDiv.style.color = "red";
+        boton.disabled = false;
+        return; 
+      }
+      
       statusDiv.innerHTML = "Validando historial diario en el servidor...";
       
-      // Enviamos la petición en formato estructurado para leer la respuesta de Google
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({ nombre: nombre, accion: accion, latitud: lat, longitud: lon })
@@ -162,7 +207,6 @@ function capturarYEnviar() {
         boton.disabled = false;
       })
       .catch(error => {
-        // Modo alternativo de confirmación visual para evitar bloqueos de red externos
         statusDiv.innerHTML = "¡Procesando! Verifica tu registro en la hoja de cálculo.";
         statusDiv.style.color = "blue";
         boton.disabled = false;
@@ -181,4 +225,3 @@ function capturarYEnviar() {
 </script>
 </body>
 </html>
-
