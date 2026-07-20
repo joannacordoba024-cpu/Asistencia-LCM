@@ -120,7 +120,7 @@
 </div>
 
 <script>
-// Tu URL unificada y lista para trabajar
+// URL de Apps Script unificada y validada
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8qrf5iTxl7JrgkFV_jt6QHVWIGol2bLpMo6dFzM4KpqPdt1s8I4rPlgN4Z6v4yFVn/exec";
 
 // Coordenadas geográficas de las dos sedes del colegio
@@ -131,6 +131,16 @@ const SEDES_COLEGIO = [
 
 // Perímetro de tolerancia permitido en metros
 const RADIO_PERMITIDO_METROS = 60; 
+
+// Genera un ID de dispositivo dinámico basado en el navegador actual
+function obtenerOcrearDeviceId() {
+  let id = localStorage.getItem("lcm_device_id");
+  if (!id) {
+    id = "DEV-" + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+    localStorage.setItem("lcm_device_id", id);
+  }
+  return id;
+}
 
 // Función matemática de Haversine para calcular distancia exacta en metros
 function obtenerDistanciaMetros(lat1, lon1, lat2, lon2) {
@@ -190,15 +200,17 @@ function capturarYEnviar() {
         return; 
       }
       
-      statusDiv.innerHTML = "Validando historial diario en el servidor...";
+      statusDiv.innerHTML = "Validando transacciones de red...";
       
+      var uId = obtenerOcrearDeviceId();
+
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ nombre: nombre, accion: accion, latitud: lat, longitud: lon })
+        body: JSON.stringify({ nombre: nombre, accion: accion, latitud: lat, longitud: lon, deviceId: uId })
       })
       .then(response => response.json())
       .then(data => {
-        if (data.status === "duplicate") {
+        if (data.status === "duplicate" || data.status === "device_blocked") {
           statusDiv.innerHTML = data.message;
           statusDiv.style.color = "orange";
         } else {
