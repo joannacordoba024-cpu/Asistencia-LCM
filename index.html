@@ -120,19 +120,15 @@
 </div>
 
 <script>
-// URL de Apps Script unificada y validada
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8qrf5iTxl7JrgkFV_jt6QHVWIGol2bLpMo6dFzM4KpqPdt1s8I4rPlgN4Z6v4yFVn/exec";
+const SCRIPT_URL = "https://google.com";
 
-// Coordenadas geográficas de las dos sedes del colegio
-const SEDES_COLEGIO = [
-  { lat: 4.607875, lon: -74.156550 }, // Sede Cra 90d
-  { lat: 4.607212, lon: -74.157393 }  // Sede Calle 42
-];
+// 📍 COORDENADAS REALES DE LA SEDE BOSA (Calle 42 Sur)
+const SEDE_LAT = 4.640259;
+const SEDE_LON = -74.172470;
 
-// Perímetro de tolerancia permitido en metros (Ampliado para mitigar errores de antena)
-const RADIO_PERMITIDO_METROS = 120;  
+// Perímetro seguro configurado a 120 metros
+const RADIO_PERMITIDO_METROS = 120; 
 
-// Genera un ID de dispositivo dinámico basado en el navegador actual
 function obtenerOcrearDeviceId() {
   let id = localStorage.getItem("lcm_device_id");
   if (!id) {
@@ -142,7 +138,6 @@ function obtenerOcrearDeviceId() {
   return id;
 }
 
-// Función matemática de Haversine para calcular distancia exacta en metros
 function obtenerDistanciaMetros(lat1, lon1, lat2, lon2) {
   const R = 6371000; 
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -165,9 +160,8 @@ function capturarYEnviar() {
     return;
   }
 
-  // 📅 VALIDACIÓN LOCAL DE FIN DE SEMANA
   var fechaActual = new Date();
-  var diaSemana = fechaActual.getDay(); // 0 = Domingo, 6 = Sábado
+  var diaSemana = fechaActual.getDay(); 
   if (diaSemana === 0 || diaSemana === 6) {
     statusDiv.innerHTML = "❌ Error: El registro de asistencia no está disponible los fines de semana.";
     statusDiv.style.color = "red";
@@ -183,25 +177,17 @@ function capturarYEnviar() {
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
       
-      // 📐 VALIDACIÓN DEL PERÍMETRO ESCOLAR (60 METROS)
-      let enInstalaciones = false;
-      for (let i = 0; i < SEDES_COLEGIO.length; i++) {
-        let distancia = obtenerDistanciaMetros(lat, lon, SEDES_COLEGIO[i].lat, SEDES_COLEGIO[i].lon);
-        if (distancia <= RADIO_PERMITIDO_METROS) {
-          enInstalaciones = true;
-          break;
-        }
-      }
+      // Cálculo del rango perimetral local
+      var distancia = obtenerDistanciaMetros(lat, lon, SEDE_LAT, SEDE_LON);
 
-      if (!enInstalaciones) {
-        statusDiv.innerHTML = "❌ Error: Debes estar en las instalaciones del colegio para registrar asistencia.";
+      if (distancia > RADIO_PERMITIDO_METROS) {
+        statusDiv.innerHTML = "❌ Error: Estás fuera del rango permitido para registrar asistencia (" + Math.round(distancia) + " metros). Acércate más.";
         statusDiv.style.color = "red";
         boton.disabled = false;
         return; 
       }
       
       statusDiv.innerHTML = "Validando transacciones de red...";
-      
       var uId = obtenerOcrearDeviceId();
 
       fetch(SCRIPT_URL, {
