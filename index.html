@@ -177,7 +177,6 @@ function capturarYEnviar() {
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
       
-      // Cálculo del rango perimetral local
       var distancia = obtenerDistanciaMetros(lat, lon, SEDE_LAT, SEDE_LON);
 
       if (distancia > RADIO_PERMITIDO_METROS) {
