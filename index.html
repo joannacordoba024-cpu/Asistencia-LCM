@@ -129,8 +129,8 @@ const SEDES_COLEGIO = [
   { lat: 4.607212, lon: -74.157393 }  // Sede Calle 42
 ];
 
-// Perímetro de tolerancia permitido en metros
-const RADIO_PERMITIDO_METROS = 60; 
+// Perímetro de tolerancia permitido en metros (Ampliado para mitigar errores de antena)
+const RADIO_PERMITIDO_METROS = 120;  
 
 // Genera un ID de dispositivo dinámico basado en el navegador actual
 function obtenerOcrearDeviceId() {
